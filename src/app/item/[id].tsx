@@ -3,59 +3,24 @@
 // Tela de Detalhes do Produto: Apresentação completa e controle de quantidade
 // ============================================================================
 
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { simularConsultaProdutoPorId } from "../../data/mockDatabase";
+import { useItemViewModel } from "../../viewmodel/useItemViewModel";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ActivityIndicator } from "react-native";
 
 export default function ItemDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  // Estados locais controlados diretamente na tela (Sem ViewModel)
-  const [carregando, setCarregando] = useState<boolean>(true);
-  const [produto, setProduto] = useState<any>(null);
-  const [quantidade, setQuantidade] = useState<number>(1);
-
-  useEffect(() => {
-    // Consulta direta ao banco de dados com simulação de delay
-    async function carregarDetalhes() {
-      if (!id) return;
-      try {
-        setCarregando(true);
-        const prodId = Array.isArray(id) ? id[0] : id;
-        const resultado = await simularConsultaProdutoPorId(prodId);
-        setProduto(resultado);
-      } catch (erro) {
-        console.error("Erro ao buscar detalhes do produto:", erro);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    carregarDetalhes();
-  }, [id]);
-
-  // Lógica de negócio de incremento/decremento embutida diretamente na View
-  function decrementarQuantidade() {
-    if (quantidade > 1) {
-      setQuantidade((prev) => prev - 1);
-    }
-  }
-
-  function incrementarQuantidade() {
-    setQuantidade((prev) => prev + 1);
-  }
+  const {
+    carregando,
+    produto,
+    quantidade,
+    aumentarQuantidade,
+    diminuirQuantidade,
+  } = useItemViewModel(id);
 
   function formatarPreco(valor: number): string {
     return `R$ ${valor.toFixed(2).replace(".", ",")}`;
@@ -154,7 +119,7 @@ export default function ItemDetailScreen() {
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles.btnMenos}
-                  onPress={decrementarQuantidade}
+                  onPress={diminuirQuantidade}
                 >
                   <Ionicons name="remove" size={20} color="#ffffff" />
                 </TouchableOpacity>
@@ -166,7 +131,7 @@ export default function ItemDetailScreen() {
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={styles.btnMais}
-                  onPress={incrementarQuantidade}
+                  onPress={aumentarQuantidade}
                 >
                   <Ionicons name="add" size={20} color="#ffffff" />
                 </TouchableOpacity>
