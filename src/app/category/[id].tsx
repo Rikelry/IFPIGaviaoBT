@@ -7,40 +7,19 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { simularConsultaProdutosPorCategoria } from "../../data/mockDatabase";
+import { useCategoryViewModel } from "../../viewmodel/useCategoryViewModel";
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, ActivityIndicator, } from "react-native";
 
 export default function CategoryScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  // Estados locais controlados na própria View (Sem separação de ViewModel)
-  const [carregando, setCarregando] = useState<boolean>(true);
-  const [produtos, setProdutos] = useState<any[]>([]);
+  const { carregando, produtos } = useCategoryViewModel(id);
 
   // Título amigável da categoria
   const nomeCategoria =
-    id === "bebidas" ? "Bebidas" : id === "comidas" ? "Comidas" : "Cardápio";
-
-  useEffect(() => {
-    // Consulta direta com atraso simulado de banco de dados
-    async function carregarProdutos() {
-      if (!id) return;
-      try {
-        setCarregando(true);
-        const resultado = await simularConsultaProdutosPorCategoria(
-          Array.isArray(id) ? id[0] : id
-        );
-        setProdutos(resultado);
-      } catch (erro) {
-        console.error("Erro ao buscar produtos da categoria:", erro);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    carregarProdutos();
-  }, [id]);
+    id === "bebidas" ? "Bebidas" : 
+    id === "comidas" ? "Comidas" : "Cardápio";
 
   // Função auxiliar de formatação de moeda dentro do arquivo da tela
   function formatarPreco(valor: number): string {
