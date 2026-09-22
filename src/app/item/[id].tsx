@@ -6,6 +6,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { ProductInfo } from "../../view/components/ProductInfo";
 import { ProductImage } from "../../view/components/ProductImage";
 import { useItemViewModel } from "../../viewmodel/useItemViewModel";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
@@ -21,10 +22,6 @@ export default function ItemDetailScreen() {
     aumentarQuantidade,
     diminuirQuantidade,
   } = useItemViewModel(id);
-
-  function formatarPreco(valor: number): string {
-    return `R$ ${valor.toFixed(2).replace(".", ",")}`;
-  }
 
   return (
     <View style={styles.tela}>
@@ -67,43 +64,17 @@ export default function ItemDetailScreen() {
           />
 
           {/* ÁREA DE DETALHES E INFORMAÇÕES */}
-          <View style={styles.infoSecao}>
-            {/* Título do Produto e Badge de Preço */}
-            <View style={styles.tituloPrecoLinha}>
-              <Text style={styles.nomeProduto}>{produto.nome}</Text>
-              <View style={styles.badgePreco}>
-                <Text style={styles.textoBadgePreco}>
-                  {formatarPreco(produto.preco)}
-                </Text>
-              </View>
-            </View>
+          <ProductInfo
+            nome={produto.nome}
+            preco={produto.preco}
+            categoriaNome={produto.categoriaNome}
+            descricao={produto.descricao}
+            proteinas={produto.proteinas}
+            carboidratos={produto.carboidratos}
+            gorduras={produto.gorduras}
+          />
 
-            {/* Tag da Categoria */}
-            <View style={styles.categoriaTag}>
-              <Text style={styles.textoCategoriaTag}>
-                {produto.categoriaNome || "Lanche"}
-              </Text>
-            </View>
-
-            {/* Descrição do Produto */}
-            <Text style={styles.descricaoTexto}>{produto.descricao}</Text>
-
-            {/* Informações Nutricionais */}
-            <View style={styles.nutricaoLinha}>
-              <Text style={styles.nutricaoItem}>
-                Proteínas:{" "}
-                <Text style={styles.nutricaoValor}>{produto.proteinas}</Text>
-              </Text>
-              <Text style={styles.nutricaoItem}>
-                Carboidratos:{" "}
-                <Text style={styles.nutricaoValor}>{produto.carboidratos}</Text>
-              </Text>
-              <Text style={styles.nutricaoItem}>
-                Gorduras:{" "}
-                <Text style={styles.nutricaoValor}>{produto.gorduras}</Text>
-              </Text>
-            </View>
-
+          <View style={styles.acoesSecao}>
             {/* Controle de Quantidade */}
             <View style={styles.quantidadeLinha}>
               <Text style={styles.quantidadeLabel}>Quantidades:</Text>
@@ -343,5 +314,8 @@ const styles = StyleSheet.create({
   erroTexto: {
     fontSize: 16,
     color: "#dc3545",
+  },
+  acoesSecao: {
+    paddingHorizontal: 20,
   },
 });
