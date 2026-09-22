@@ -3,44 +3,17 @@
 // Tela Inicial: Apresentação das Categorias (Comidas e Bebidas)
 // ============================================================================
 
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { simularConsultaCategorias } from "../data/mockDatabase";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useHomeViewModel } from "../viewmodel/useHomeViewModel";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, ScrollView } from "react-native";
 
 export default function HomeScreen() {
   const router = useRouter();
 
-  // Estados gerenciados diretamente na View (Sem ViewModel)
-  const [carregando, setCarregando] = useState<boolean>(true);
-  const [categorias, setCategorias] = useState<any[]>([]);
-
-  useEffect(() => {
-    // Busca direta do banco simulado com delay assíncrono
-    async function carregarDados() {
-      try {
-        setCarregando(true);
-        const resultado = await simularConsultaCategorias();
-        setCategorias(resultado);
-      } catch (error) {
-        console.error("Erro ao carregar categorias:", error);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    carregarDados();
-  }, []);
+  const { carregando, categorias } = useHomeViewModel();
 
   return (
     <View style={styles.tela}>
