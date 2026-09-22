@@ -3,20 +3,12 @@
 // Tela de Categoria: Listagem de Itens por Categoria selecionada
 // ============================================================================
 
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useState, useEffect } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { simularConsultaProdutosPorCategoria } from "../../data/mockDatabase";
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, ActivityIndicator, } from "react-native";
 
 export default function CategoryScreen() {
   const router = useRouter();
