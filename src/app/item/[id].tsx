@@ -3,12 +3,12 @@
 // Tela de Detalhes do Produto: Apresentação completa e controle de quantidade
 // ============================================================================
 
-import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { ProductImage } from "../../view/components/ProductImage";
 import { useItemViewModel } from "../../viewmodel/useItemViewModel";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 
 export default function ItemDetailScreen() {
   const router = useRouter();
@@ -60,17 +60,11 @@ export default function ItemDetailScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* FOTO GRANDE DO PRODUTO */}
-          <View style={styles.cardFoto}>
-            <Image
-              source={produto.imagemGrande || produto.imagem}
-              style={styles.fotoGrande}
-              resizeMode="cover"
-            />
-            {/* Etiqueta Sobreposta no Canto Inferior da Foto */}
-            <View style={styles.overlayFoto}>
-              <Text style={styles.overlayTexto}>{produto.nome}</Text>
-            </View>
-          </View>
+          <ProductImage
+            imagem={produto.imagem}
+            imagemGrande={produto.imagemGrande}
+            nome={produto.nome}
+          />
 
           {/* ÁREA DE DETALHES E INFORMAÇÕES */}
           <View style={styles.infoSecao}>
@@ -202,37 +196,6 @@ const styles = StyleSheet.create({
   },
   conteudoScroll: {
     paddingBottom: 40,
-  },
-  cardFoto: {
-    marginHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 18,
-    overflow: "hidden",
-    backgroundColor: "#eaeaea",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-    position: "relative",
-  },
-  fotoGrande: {
-    width: "100%",
-    height: 240,
-  },
-  overlayFoto: {
-    position: "absolute",
-    bottom: 10,
-    right: 12,
-    backgroundColor: "rgba(0, 0, 0, 0.45)",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  overlayTexto: {
-    color: "#ffffff",
-    fontSize: 13,
-    fontWeight: "500",
   },
   infoSecao: {
     paddingHorizontal: 20,
