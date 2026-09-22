@@ -7,6 +7,7 @@ import React from "react";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CategoryCard } from "../view/components/CategoryCard";
 import { useHomeViewModel } from "../viewmodel/useHomeViewModel";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, ScrollView } from "react-native";
 
@@ -53,29 +54,11 @@ export default function HomeScreen() {
         ) : (
           <View style={styles.gridCategorias}>
             {categorias.map((cat) => (
-              <TouchableOpacity
+              <CategoryCard
                 key={cat.id}
-                activeOpacity={0.88}
-                style={[styles.cardCategoria, { borderColor: cat.corBorda }]}
+                categoria={cat}
                 onPress={() => router.push(`/category/${cat.id}` as any)}
-              >
-                {/* Imagem de Capa da Categoria */}
-                <Image
-                  source={cat.imagem}
-                  style={styles.imagemCategoria}
-                  resizeMode="cover"
-                />
-
-                {/* Rodapé do Card com Nome e Seta */}
-                <View style={styles.rodapeCard}>
-                  <Text style={styles.nomeCategoria}>{cat.nome}</Text>
-                  <Ionicons
-                    name="arrow-forward"
-                    size={20}
-                    color={cat.corSeta}
-                  />
-                </View>
-              </TouchableOpacity>
+              />
             ))}
           </View>
         )}
