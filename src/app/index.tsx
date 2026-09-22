@@ -3,13 +3,11 @@
 // Tela Inicial: Apresentação das Categorias (Comidas e Bebidas)
 // ============================================================================
 
-import React from "react";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CategoryCard } from "../view/components/CategoryCard";
 import { useHomeViewModel } from "../viewmodel/useHomeViewModel";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator, ScrollView } from "react-native";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -141,34 +139,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     gap: 14,
-  },
-  cardCategoria: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    borderWidth: 2,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  imagemCategoria: {
-    width: "100%",
-    height: 210,
-  },
-  rodapeCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: "#ffffff",
-  },
-  nomeCategoria: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
+  }
 });
