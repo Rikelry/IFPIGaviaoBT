@@ -1,5 +1,4 @@
 // ============================================================================
-// PADRÃO BIG TRIPE (ANTI-PADRÃO: TUDO NO MESMO ARQUIVO)
 // Tela de Categoria: Listagem de Itens por Categoria selecionada
 // ============================================================================
 
@@ -8,7 +7,14 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ProductCard } from "../../view/components/ProductCard";
 import { useCategoryViewModel } from "../../viewmodel/useCategoryViewModel";
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, ActivityIndicator, } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 
 export default function CategoryScreen() {
   const router = useRouter();
@@ -18,9 +24,8 @@ export default function CategoryScreen() {
 
   // Título amigável da categoria
   const nomeCategoria =
-    id === "bebidas" ? "Bebidas" : 
+    id === "bebidas" ? "Bebidas" :
     id === "comidas" ? "Comidas" : "Cardápio";
-
 
   return (
     <View style={styles.tela}>
@@ -78,7 +83,6 @@ export default function CategoryScreen() {
   );
 }
 
-// Estilos concentrados diretamente no próprio arquivo (Padrão Big Tripe)
 const styles = StyleSheet.create({
   tela: {
     flex: 1,
