@@ -1,5 +1,4 @@
 // ============================================================================
-// PADRÃO BIG TRIPE (ANTI-PADRÃO: TUDO NO MESMO ARQUIVO)
 // Tela Inicial: Apresentação das Categorias (Comidas e Bebidas)
 // ============================================================================
 
@@ -7,7 +6,14 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CategoryCard } from "../view/components/CategoryCard";
 import { useHomeViewModel } from "../viewmodel/useHomeViewModel";
-import { View, Text, StyleSheet, Image, ActivityIndicator, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -65,7 +71,6 @@ export default function HomeScreen() {
   );
 }
 
-// Estilos gigantescos concentrados no final do arquivo da tela (Típico do Big Tripe)
 const styles = StyleSheet.create({
   tela: {
     flex: 1,
