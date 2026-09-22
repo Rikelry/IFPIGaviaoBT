@@ -1,5 +1,4 @@
 // ============================================================================
-// PADRÃO BIG TRIPE (ANTI-PADRÃO: TUDO NO MESMO ARQUIVO)
 // Tela de Detalhes do Produto: Apresentação completa e controle de quantidade
 // ============================================================================
 
@@ -10,7 +9,14 @@ import { ProductInfo } from "../../view/components/ProductInfo";
 import { ProductImage } from "../../view/components/ProductImage";
 import { useItemViewModel } from "../../viewmodel/useItemViewModel";
 import { QuantitySelector } from "../../view/components/QuantitySelector";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 
 export default function ItemDetailScreen() {
   const router = useRouter();
@@ -102,7 +108,6 @@ export default function ItemDetailScreen() {
   );
 }
 
-// Estilos Big Tripe misturados diretamente no arquivo da tela
 const styles = StyleSheet.create({
   tela: {
     flex: 1,
