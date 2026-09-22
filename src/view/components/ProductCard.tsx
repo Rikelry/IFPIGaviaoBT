@@ -1,13 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
 import { Product } from "../../model/entities/Product";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ProductCardProps = {
   produto: Product;
@@ -24,93 +17,71 @@ export function ProductCard({
 
   return (
     <TouchableOpacity
-      activeOpacity={0.88}
-      style={styles.card}
+      activeOpacity={0.85}
+      style={styles.cardItem}
       onPress={onPress}
     >
       <Image
         source={produto.imagem}
-        style={styles.imagem}
+        style={styles.thumbnail}
         resizeMode="cover"
       />
 
-      <View style={styles.conteudo}>
-        <View style={styles.linhaTitulo}>
-          <Text style={styles.nome} numberOfLines={2}>
-            {produto.nome}
-          </Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.nomeItem}>{produto.nome}</Text>
 
-          <Ionicons
-            name="chevron-forward"
-            size={22}
-            color="#501673"
-          />
-        </View>
-
-        <Text style={styles.descricao} numberOfLines={2}>
-          {produto.descricao}
-        </Text>
-
-        <Text style={styles.preco}>
+        <Text style={styles.precoItem}>
           {formatarPreco(produto.preco)}
         </Text>
       </View>
+
+      <Ionicons
+        name="chevron-forward"
+        size={22}
+        color="#b0b5be"
+      />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    backgroundColor: "#ffffff",
-    borderRadius: 14,
-    marginBottom: 14,
-    overflow: "hidden",
-    elevation: 3,
-    shadowColor: "#000000",
-    shadowOpacity: 0.08,
-    shadowRadius: 5,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-  },
-
-  imagem: {
-    width: 110,
-    height: 130,
-  },
-
-  conteudo: {
-    flex: 1,
-    padding: 14,
-  },
-
-  linhaTitulo: {
+  cardItem: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    gap: 8,
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
   },
 
-  nome: {
+  thumbnail: {
+    width: 80,
+    height: 74,
+    borderRadius: 10,
+    backgroundColor: "#f0f0f0",
+  },
+
+  infoContainer: {
     flex: 1,
-    fontSize: 17,
-    fontWeight: "700",
-    color: "#2d1438",
+    marginLeft: 14,
+    justifyContent: "center",
   },
 
-  descricao: {
-    marginTop: 8,
-    fontSize: 13,
-    lineHeight: 18,
-    color: "#666666",
-  },
-
-  preco: {
-    marginTop: 10,
+  nomeItem: {
     fontSize: 16,
-    fontWeight: "700",
-    color: "#501673",
+    fontWeight: "bold",
+    color: "#1a1a1a",
+    marginBottom: 6,
+  },
+
+  precoItem: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#333333",
   },
 });
