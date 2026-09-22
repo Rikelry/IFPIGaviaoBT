@@ -9,6 +9,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ProductInfo } from "../../view/components/ProductInfo";
 import { ProductImage } from "../../view/components/ProductImage";
 import { useItemViewModel } from "../../viewmodel/useItemViewModel";
+import { QuantitySelector } from "../../view/components/QuantitySelector";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 
 export default function ItemDetailScreen() {
@@ -76,32 +77,11 @@ export default function ItemDetailScreen() {
 
           <View style={styles.acoesSecao}>
             {/* Controle de Quantidade */}
-            <View style={styles.quantidadeLinha}>
-              <Text style={styles.quantidadeLabel}>Quantidades:</Text>
-
-              <View style={styles.seletorContainer}>
-                {/* Botão Menos (Roxo) */}
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.btnMenos}
-                  onPress={diminuirQuantidade}
-                >
-                  <Ionicons name="remove" size={20} color="#ffffff" />
-                </TouchableOpacity>
-
-                {/* Número da Quantidade */}
-                <Text style={styles.numeroQuantidade}>{quantidade}</Text>
-
-                {/* Botão Mais (Verde) */}
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.btnMais}
-                  onPress={aumentarQuantidade}
-                >
-                  <Ionicons name="add" size={20} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <QuantitySelector
+              quantidade={quantidade}
+              onDiminuir={diminuirQuantidade}
+              onAumentar={aumentarQuantidade}
+            />
 
             {/* Botão Voltar ao Cardápio */}
             <TouchableOpacity
