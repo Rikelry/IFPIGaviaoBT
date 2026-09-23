@@ -1,46 +1,24 @@
 // ============================================================================
-// PADRÃO BIG TRIPE (ANTI-PADRÃO: TUDO NO MESMO ARQUIVO)
 // Tela Inicial: Apresentação das Categorias (Comidas e Bebidas)
 // ============================================================================
 
-import React, { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { CategoryCard } from "../view/components/CategoryCard";
+import { useHomeViewModel } from "../viewmodel/useHomeViewModel";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Image,
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { simularConsultaCategorias } from "../data/mockDatabase";
 
 export default function HomeScreen() {
   const router = useRouter();
 
-  // Estados gerenciados diretamente na View (Sem ViewModel)
-  const [carregando, setCarregando] = useState<boolean>(true);
-  const [categorias, setCategorias] = useState<any[]>([]);
-
-  useEffect(() => {
-    // Busca direta do banco simulado com delay assíncrono
-    async function carregarDados() {
-      try {
-        setCarregando(true);
-        const resultado = await simularConsultaCategorias();
-        setCategorias(resultado);
-      } catch (error) {
-        console.error("Erro ao carregar categorias:", error);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    carregarDados();
-  }, []);
+  const { carregando, categorias } = useHomeViewModel();
 
   return (
     <View style={styles.tela}>
@@ -80,29 +58,11 @@ export default function HomeScreen() {
         ) : (
           <View style={styles.gridCategorias}>
             {categorias.map((cat) => (
-              <TouchableOpacity
+              <CategoryCard
                 key={cat.id}
-                activeOpacity={0.88}
-                style={[styles.cardCategoria, { borderColor: cat.corBorda }]}
+                categoria={cat}
                 onPress={() => router.push(`/category/${cat.id}` as any)}
-              >
-                {/* Imagem de Capa da Categoria */}
-                <Image
-                  source={cat.imagem}
-                  style={styles.imagemCategoria}
-                  resizeMode="cover"
-                />
-
-                {/* Rodapé do Card com Nome e Seta */}
-                <View style={styles.rodapeCard}>
-                  <Text style={styles.nomeCategoria}>{cat.nome}</Text>
-                  <Ionicons
-                    name="arrow-forward"
-                    size={20}
-                    color={cat.corSeta}
-                  />
-                </View>
-              </TouchableOpacity>
+              />
             ))}
           </View>
         )}
@@ -111,7 +71,6 @@ export default function HomeScreen() {
   );
 }
 
-// Estilos gigantescos concentrados no final do arquivo da tela (Típico do Big Tripe)
 const styles = StyleSheet.create({
   tela: {
     flex: 1,
@@ -185,34 +144,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     gap: 14,
-  },
-  cardCategoria: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    borderWidth: 2,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  imagemCategoria: {
-    width: "100%",
-    height: 210,
-  },
-  rodapeCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: "#ffffff",
-  },
-  nomeCategoria: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
+  }
 });

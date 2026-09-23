@@ -1,13 +1,16 @@
-// ============================================================================
+// ====================================================================================
 // SIMULAÇÃO DO BANCO DE DADOS LOCAL (IFPI GAVIÃO)
 // ATENÇÃO: Este banco simula um atraso de rede/I/O assíncrono (como SQLite/API real)
 // No padrão Big Tripe, as telas importam e manipulam diretamente estas funções e dados
 // sem tipagem formal, repositórios ou ViewModels.
-// ============================================================================
+// ====================================================================================
+
+import { Category } from "../model/entities/Category";
+import { Product } from "../model/entities/Product";
 
 const DELAY_MS = 600; // Simula 600ms de latência de consulta local
 
-export const BANCO_CATEGORIAS = [
+export const BANCO_CATEGORIAS: Category[] = [
   {
     id: "comidas",
     nome: "Comidas",
@@ -24,7 +27,7 @@ export const BANCO_CATEGORIAS = [
   },
 ];
 
-export const BANCO_PRODUTOS = [
+export const BANCO_PRODUTOS: Product[] = [
   {
     id: "pastel-de-carne",
     categoriaId: "comidas",
@@ -140,17 +143,23 @@ export const BANCO_PRODUTOS = [
 ];
 
 // Funções de consulta com simulação de delay assíncrono (simulando IO de banco de dados)
-export async function simularConsultaCategorias() {
+export async function simularConsultaCategorias(): Promise<Category[]> {
   await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
   return [...BANCO_CATEGORIAS];
 }
 
-export async function simularConsultaProdutosPorCategoria(categoriaId: string) {
+export async function simularConsultaProdutosPorCategoria(categoriaId: string): Promise<Product[]> {
   await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
-  return BANCO_PRODUTOS.filter((p) => p.categoriaId === categoriaId);
+
+  return BANCO_PRODUTOS.filter(
+    (produto) => produto.categoriaId === categoriaId
+  );
 }
 
-export async function simularConsultaProdutoPorId(produtoId: string) {
+export async function simularConsultaProdutoPorId(produtoId: string): Promise<Product | undefined> {
   await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
-  return BANCO_PRODUTOS.find((p) => p.id === produtoId);
+
+  return BANCO_PRODUTOS.find(
+    (produto) => produto.id === produtoId
+  );
 }

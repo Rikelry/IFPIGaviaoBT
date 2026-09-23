@@ -1,65 +1,34 @@
 // ============================================================================
-// PADRÃO BIG TRIPE (ANTI-PADRÃO: TUDO NO MESMO ARQUIVO)
 // Tela de Detalhes do Produto: Apresentação completa e controle de quantidade
 // ============================================================================
 
-import React, { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { ProductInfo } from "../../view/components/ProductInfo";
+import { ProductImage } from "../../view/components/ProductImage";
+import { useItemViewModel } from "../../viewmodel/useItemViewModel";
+import { QuantitySelector } from "../../view/components/QuantitySelector";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { simularConsultaProdutoPorId } from "../../data/mockDatabase";
 
 export default function ItemDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  // Estados locais controlados diretamente na tela (Sem ViewModel)
-  const [carregando, setCarregando] = useState<boolean>(true);
-  const [produto, setProduto] = useState<any>(null);
-  const [quantidade, setQuantidade] = useState<number>(1);
-
-  useEffect(() => {
-    // Consulta direta ao banco de dados com simulação de delay
-    async function carregarDetalhes() {
-      if (!id) return;
-      try {
-        setCarregando(true);
-        const prodId = Array.isArray(id) ? id[0] : id;
-        const resultado = await simularConsultaProdutoPorId(prodId);
-        setProduto(resultado);
-      } catch (erro) {
-        console.error("Erro ao buscar detalhes do produto:", erro);
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    carregarDetalhes();
-  }, [id]);
-
-  // Lógica de negócio de incremento/decremento embutida diretamente na View
-  function decrementarQuantidade() {
-    if (quantidade > 1) {
-      setQuantidade((prev) => prev - 1);
-    }
-  }
-
-  function incrementarQuantidade() {
-    setQuantidade((prev) => prev + 1);
-  }
-
-  function formatarPreco(valor: number): string {
-    return `R$ ${valor.toFixed(2).replace(".", ",")}`;
-  }
+  const {
+    carregando,
+    produto,
+    quantidade,
+    aumentarQuantidade,
+    diminuirQuantidade,
+  } = useItemViewModel(id);
 
   return (
     <View style={styles.tela}>
@@ -95,83 +64,30 @@ export default function ItemDetailScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* FOTO GRANDE DO PRODUTO */}
-          <View style={styles.cardFoto}>
-            <Image
-              source={produto.imagemGrande || produto.imagem}
-              style={styles.fotoGrande}
-              resizeMode="cover"
-            />
-            {/* Etiqueta Sobreposta no Canto Inferior da Foto */}
-            <View style={styles.overlayFoto}>
-              <Text style={styles.overlayTexto}>{produto.nome}</Text>
-            </View>
-          </View>
+          <ProductImage
+            imagem={produto.imagem}
+            imagemGrande={produto.imagemGrande}
+            nome={produto.nome}
+          />
 
           {/* ÁREA DE DETALHES E INFORMAÇÕES */}
-          <View style={styles.infoSecao}>
-            {/* Título do Produto e Badge de Preço */}
-            <View style={styles.tituloPrecoLinha}>
-              <Text style={styles.nomeProduto}>{produto.nome}</Text>
-              <View style={styles.badgePreco}>
-                <Text style={styles.textoBadgePreco}>
-                  {formatarPreco(produto.preco)}
-                </Text>
-              </View>
-            </View>
+          <ProductInfo
+            nome={produto.nome}
+            preco={produto.preco}
+            categoriaNome={produto.categoriaNome}
+            descricao={produto.descricao}
+            proteinas={produto.proteinas}
+            carboidratos={produto.carboidratos}
+            gorduras={produto.gorduras}
+          />
 
-            {/* Tag da Categoria */}
-            <View style={styles.categoriaTag}>
-              <Text style={styles.textoCategoriaTag}>
-                {produto.categoriaNome || "Lanche"}
-              </Text>
-            </View>
-
-            {/* Descrição do Produto */}
-            <Text style={styles.descricaoTexto}>{produto.descricao}</Text>
-
-            {/* Informações Nutricionais */}
-            <View style={styles.nutricaoLinha}>
-              <Text style={styles.nutricaoItem}>
-                Proteínas:{" "}
-                <Text style={styles.nutricaoValor}>{produto.proteinas}</Text>
-              </Text>
-              <Text style={styles.nutricaoItem}>
-                Carboidratos:{" "}
-                <Text style={styles.nutricaoValor}>{produto.carboidratos}</Text>
-              </Text>
-              <Text style={styles.nutricaoItem}>
-                Gorduras:{" "}
-                <Text style={styles.nutricaoValor}>{produto.gorduras}</Text>
-              </Text>
-            </View>
-
+          <View style={styles.acoesSecao}>
             {/* Controle de Quantidade */}
-            <View style={styles.quantidadeLinha}>
-              <Text style={styles.quantidadeLabel}>Quantidades:</Text>
-
-              <View style={styles.seletorContainer}>
-                {/* Botão Menos (Roxo) */}
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.btnMenos}
-                  onPress={decrementarQuantidade}
-                >
-                  <Ionicons name="remove" size={20} color="#ffffff" />
-                </TouchableOpacity>
-
-                {/* Número da Quantidade */}
-                <Text style={styles.numeroQuantidade}>{quantidade}</Text>
-
-                {/* Botão Mais (Verde) */}
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.btnMais}
-                  onPress={incrementarQuantidade}
-                >
-                  <Ionicons name="add" size={20} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <QuantitySelector
+              quantidade={quantidade}
+              onDiminuir={diminuirQuantidade}
+              onAumentar={aumentarQuantidade}
+            />
 
             {/* Botão Voltar ao Cardápio */}
             <TouchableOpacity
@@ -192,7 +108,6 @@ export default function ItemDetailScreen() {
   );
 }
 
-// Estilos Big Tripe misturados diretamente no arquivo da tela
 const styles = StyleSheet.create({
   tela: {
     flex: 1,
@@ -238,146 +153,6 @@ const styles = StyleSheet.create({
   conteudoScroll: {
     paddingBottom: 40,
   },
-  cardFoto: {
-    marginHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 18,
-    overflow: "hidden",
-    backgroundColor: "#eaeaea",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-    position: "relative",
-  },
-  fotoGrande: {
-    width: "100%",
-    height: 240,
-  },
-  overlayFoto: {
-    position: "absolute",
-    bottom: 10,
-    right: 12,
-    backgroundColor: "rgba(0, 0, 0, 0.45)",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  overlayTexto: {
-    color: "#ffffff",
-    fontSize: 13,
-    fontWeight: "500",
-  },
-  infoSecao: {
-    paddingHorizontal: 20,
-    paddingTop: 18,
-  },
-  tituloPrecoLinha: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  nomeProduto: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    lineHeight: 30,
-  },
-  badgePreco: {
-    backgroundColor: "#248232",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textoBadgePreco: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  categoriaTag: {
-    alignSelf: "flex-end",
-    marginTop: 6,
-    backgroundColor: "#f1f3f5",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: "#e2e6ea",
-  },
-  textoCategoriaTag: {
-    fontSize: 12,
-    color: "#495057",
-    fontWeight: "600",
-  },
-  descricaoTexto: {
-    marginTop: 16,
-    fontSize: 16,
-    color: "#343a40",
-    lineHeight: 24,
-  },
-  nutricaoLinha: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 22,
-    gap: 16,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "#f0f0f0",
-  },
-  nutricaoItem: {
-    fontSize: 14,
-    color: "#6c757d",
-  },
-  nutricaoValor: {
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
-  quantidadeLinha: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 24,
-    marginBottom: 26,
-  },
-  quantidadeLabel: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
-  seletorContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  btnMenos: {
-    width: 34,
-    height: 34,
-    borderRadius: 6,
-    backgroundColor: "#501673",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  numeroQuantidade: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginHorizontal: 16,
-    minWidth: 18,
-    textAlign: "center",
-  },
-  btnMais: {
-    width: 34,
-    height: 34,
-    borderRadius: 6,
-    backgroundColor: "#248232",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   btnVoltarCardapio: {
     backgroundColor: "#501673",
     borderRadius: 12,
@@ -415,5 +190,8 @@ const styles = StyleSheet.create({
   erroTexto: {
     fontSize: 16,
     color: "#dc3545",
+  },
+  acoesSecao: {
+    paddingHorizontal: 20,
   },
 });
