@@ -2,7 +2,8 @@
 Tecnologia em Análise e Desenvolvimento de Sistemas (TADS)  
 **Disciplina**: Programação para Dispositivos Móveis (PDM) | **Prof.:** Iallen Gábio  
 
-> [!IMPORTANT] # 🦅 Atividade: Evolução para o MVVM Sofisticado  
+> [!IMPORTANT]
+> # 🦅 Atividade: Evolução para o MVVM Sofisticado  
 > Cardápio Digital IFPI Gavião – Da Arquitetura Simplificada para a Sofisticada
 
 ### 1. Contextualização e Objetivo
