@@ -1,44 +1,54 @@
 import { useEffect, useState } from "react";
 
+import { defaultContainer } from "../di/container";
 import { Product } from "../model/entities/Product";
-import { MenuService } from "../model/services/MenuService";
+import { GetProductByIdUseCase } from "../model/usecases/GetProductByIdUseCase";
 
-const menuService = new MenuService();
+export function useItemViewModel(
+  produtoId: string,
+  getProductByIdUseCase: GetProductByIdUseCase = defaultContainer.getProductByIdUseCase
+) {
+  const [carregando, setCarregando] = useState(true);
+  const [produto, setProduto] = useState<Product | undefined>(undefined);
+  const [quantidade, setQuantidade] = useState(1);
 
-export function useItemViewModel(produtoId: string) {
-    const [carregando, setCarregando] = useState(true);
-    const [produto, setProduto] = useState<Product | undefined>(undefined);
-    const [quantidade, setQuantidade] = useState(1);
-
-    useEffect(() => {
-        carregarProduto();
-    }, [produtoId]);
+  useEffect(() => {
+    let isMounted = true;
 
     async function carregarProduto() {
-        try {
-            setCarregando(true);
-
-            const resultado = await menuService.buscarProdutoPorId(produtoId);
-
-            setProduto(resultado);
-        } finally {
-            setCarregando(false);
+      try {
+        setCarregando(true);
+        const resultado = await getProductByIdUseCase.execute(produtoId);
+        if (isMounted) {
+          setProduto(resultado);
         }
+      } finally {
+        if (isMounted) {
+          setCarregando(false);
+        }
+      }
     }
 
-    function aumentarQuantidade() {
-        setQuantidade((valorAtual) => valorAtual + 1);
-    }
+    carregarProduto();
 
-    function diminuirQuantidade() {
-        setQuantidade((valorAtual) => Math.max(1, valorAtual - 1));
-    }
-
-    return {
-        carregando,
-        produto,
-        quantidade,
-        aumentarQuantidade,
-        diminuirQuantidade,
+    return () => {
+      isMounted = false;
     };
+  }, [produtoId, getProductByIdUseCase]);
+
+  function aumentarQuantidade() {
+    setQuantidade((valorAtual) => valorAtual + 1);
+  }
+
+  function diminuirQuantidade() {
+    setQuantidade((valorAtual) => Math.max(1, valorAtual - 1));
+  }
+
+  return {
+    carregando,
+    produto,
+    quantidade,
+    aumentarQuantidade,
+    diminuirQuantidade,
+  };
 }

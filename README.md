@@ -1,73 +1,59 @@
-# 🦅 IFPI Gavião - Cardápio Digital (Versão Big Tripe)
+**INSTITUTO FEDERAL DO PIAUÍ - IFPI - `ATIVIDADE PRÁTICA`**  
+Tecnologia em Análise e Desenvolvimento de Sistemas (TADS)  
+**Disciplina**: Programação para Dispositivos Móveis (PDM) | **Prof.:** Iallen Gábio  
 
-> **Atividade Prática de Programação para Dispositivos Móveis (PDM) - IFPI**  
-> **Professor:** Iallen Gábio de Sousa Santos
+> [!IMPORTANT]
+> # 🦅 Atividade: Evolução para o MVVM Sofisticado  
+> Cardápio Digital IFPI Gavião – Da Arquitetura Simplificada para a Sofisticada
 
----
+### 1. Contextualização e Objetivo
 
-## 📱 Sobre o Projeto
+Na atividade anterior, você realizou a refatoração do aplicativo **IFPI Gavião** para o padrão **MVVM Simplificado**.  
+Agora, daremos o próximo passo rumo a uma arquitetura profissional, desacoplada e com alto índice de testabilidade: o  
+**MVVM Sofisticado**.  
 
-O **IFPI Gavião** é um aplicativo de cardápio digital desenvolvido com **React Native**, **Expo (v57)** e **TypeScript** para uma lanchonete fictícia institucional.
+O objetivo desta atividade é pegar a sua base em **MVVM Simplificado** e reestruturá-la de acordo com as diretrizes do  
+**Capítulo 10 do livro de PDM** (_"MVVM Sofisticado com React Native, TypeScript e Expo"_), aplicando os princípios de  
+**Clean Architecture** e Inversão de Dependências (DIP).  
 
-O sufixo **"BT"** no nome do projeto refere-se ao padrão **"Big Tripe"** — uma referência bem-humorada à **ausência de padrão de projeto**, onde o desenvolvedor implementa tudo em um único arquivo (ou, no caso do Expo Router, tudo concentrado em um único arquivo por tela):
-- Acesso a dados e simulação de banco de dados diretamente na tela;
-- Regras de negócio e cálculos de apresentação misturados com a interface;
-- Gerenciamento direto de estado e controle de loading na própria View;
-- Ausência de separação arquitetural e estilização monolítica com `StyleSheet`.
+### 2. O Que Muda em Relação ao MVVM Simplificado?
 
-O banco de dados da aplicação é local, mas foi construído para simular um pequeno atraso assíncrono para entregar os dados, comportando-se como um banco de dados ou API de verdade.
+* **Regras de Negócio em Use Cases:** A ViewModel não contém regras de negócio nem validações de domínio. Toda regra fica isolada em Use Cases na camada `src/usecase/`.
+* **Dependência Exclusiva de Abstrações:** Nem a ViewModel nem os Use Cases conhecem implementações concretas; eles interagem apenas com interfaces (prefixadas com `I`).
+* **Isolamento da Infraestrutura (`src/infra/`):** O código concreto de acesso aos dados fica restrito à infraestrutura e nunca vaza detalhes ou erros técnicos para cima.
+* **Injeção de Dependências (`src/di/container.ts`):** Ponto único de composição que instancia a infraestrutura e a conecta aos Use Cases. As ViewModels recebem seus Use Cases por parâmetro (com default do container), permitindo fácil criação de testes unitários.
+* **Tratamento Estruturado de Erros:** Criação de `src/model/errors.ts` com a classe base `DomainError` e erros específicos
+(`ValidationError`, `DataSourceError`). A ViewModel trata `err instanceof DomainError` para exibir mensagens ao usuário.
 
----
+### 3. Passo a Passo para Realização
 
-## 🎯 Atividade Prática: Refatoração para o MVVM Simplificado
+1. **Utilize a sua base da atividade anterior:**  
+Abra o seu repositório do **IFPI Gavião** (já refatorado no padrão MVVM Simplificado) e crie uma nova branch:
+```Bash
+git checkout -b feature/refactor-mvvm-sofisticado
+```
 
-Esta aplicação serve como base para a atividade prática da disciplina.
+2. **Evolua as Camadas conforme o Capítulo 10:**
+   * **Domínio (`src/model/`):** Organize em `entities/` (entidades puras), `datasources/` (interfaces `iProductDataSource.ts`, `iCategoryDataSource.ts`) e `errors.ts`.
+   * **Infraestrutura (`src/infra/`):** Implementações com atraso assíncrono em `infra/datasources/`, implementando os contratos do domínio e convertendo erros externos.
+   * **Casos de Uso (`src/usecase/`):** Contratos (`iMenuUseCases.ts`) e implementação (`menuUseCases.ts`) com as regras de negócio e validações.
+   * **Injeção (`src/di/container.ts`):** Instanciação da infraestrutura e exportação da instância dos Use Cases.
+   * **ViewModels (`src/viewmodel/`):** Ajuste dos hooks para dependerem apenas das interfaces de Use Case injetadas via parâmetro.
+   * **Views e Rotas:** Mantenha a fidelidade visual das telas em `src/view/` e as rotas finas em `src/app/`.
+3. **Teste e envie as alterações:**
+```Bash
+git push origin feature/refactor-mvvm-sofisticado
+```
 
-A atividade consiste em:
-1. Fazer um **fork** deste repositório;
-2. Realizar uma **refatoração completa** do projeto para adequá-lo ao **MVVM Simplificado**, seguindo rigorosamente as recomendações, padrões e convenções apresentados nas aulas e no material didático (livro da disciplina de PDM);
-3. Garantir que a aplicação mantenha a mesma identidade visual, comportamento e simulação assíncrona do banco de dados após a refatoração.
+### 4. Instruções para Entrega
 
----
+> 📤 Submissão no Google Classroom:  
+> Submeta o **link público do seu repositório no GitHub** contendo a branch com a implementação da arquitetura **MVVM Sofisticado**.
 
-## 🚀 Como Executar o Projeto
+### 5. Anexo: Referência Visual das Telas da Aplicação
 
-1. **Clone o repositório (ou o seu Fork):**
-   ```bash
-   git clone https://github.com/SEU_USUARIO/IFPIGaviaoBT.git
-   cd IFPIGaviaoBT
-   ```
+A aplicação deve manter a mesma funcionalidade, identidade visual e comportamento assíncrono observados nas telas abaixo:
 
-2. **Instale as dependências:**
-   ```bash
-   npm install
-   ```
-
-3. **Inicie o servidor de desenvolvimento do Expo:**
-   ```bash
-   npx expo start
-   ```
-
-4. **Abra o aplicativo:**
-   - No celular físico usando o app **Expo Go** (leitura do QR Code).
-   - No emulador Android (`a`) ou simulador iOS (`i`).
-   - No navegador (`w`).
-
----
-
-## 📤 Instruções para Envio da Atividade
-
-1. Faça o **Fork** deste repositório para o seu perfil pessoal no GitHub.
-2. Clone o seu fork na sua máquina de desenvolvimento.
-3. Crie uma branch para o seu trabalho:
-   ```bash
-   git checkout -b feature/refactor-mvvm
-   ```
-4. Realize a refatoração completa para o **MVVM Simplificado**.
-5. Faça commits frequentes e bem descritos.
-6. Envie suas alterações para o seu GitHub e submeta o link do repositório conforme as orientações do professor no Google Classroom / SIGAA.
-
----
-
-*IFPI - Campus Piripiri*  
-*Tecnologia em Análise e Desenvolvimento de Sistemas (TADS)*
+| 1. Tela Inicial (Categorias)     | 2. Listagem de Itens (Cardápio)  | 3. Detalhes do Lanche            |
+| :------------------------------: | :------------------------------: | :------------------------------: |
+| ![](assets/images/readme/1.webp) | ![](assets/images/readme/2.webp) | ![](assets/images/readme/3.webp) |

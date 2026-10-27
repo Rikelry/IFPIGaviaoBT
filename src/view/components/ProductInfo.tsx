@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { formatarPreco } from "../utils/formatters";
 
 type ProductInfoProps = {
     nome: string;
@@ -19,9 +20,6 @@ export function ProductInfo({
     carboidratos,
     gorduras,
 }: ProductInfoProps) {
-    function formatarPreco(valor: number): string {
-        return `R$ ${valor.toFixed(2).replace(".", ",")}`;
-    }
 
     return (
         <View style={styles.infoSecao}>
