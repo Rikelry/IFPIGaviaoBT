@@ -20,12 +20,7 @@ export default function CategoryScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const { carregando, produtos } = useCategoryViewModel(id);
-
-  // Título amigável da categoria
-  const nomeCategoria =
-    id === "bebidas" ? "Bebidas" :
-    id === "comidas" ? "Comidas" : "Cardápio";
+  const { carregando, produtos, nomeCategoria } = useCategoryViewModel(id);
 
   return (
     <View style={styles.tela}>

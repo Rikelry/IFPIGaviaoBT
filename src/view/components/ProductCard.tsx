@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "../../model/entities/Product";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { formatarPreco } from "../utils/formatters";
 
 type ProductCardProps = {
   produto: Product;
@@ -11,9 +12,6 @@ export function ProductCard({
   produto,
   onPress,
 }: ProductCardProps) {
-  function formatarPreco(valor: number): string {
-    return `R$ ${valor.toFixed(2).replace(".", ",")}`;
-  }
 
   return (
     <TouchableOpacity
